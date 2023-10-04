@@ -1,26 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import RouteList from "../src/components/RouteList";
+import RouteDetails from "./components/RouteDetails";
+import RouteForm from "./components/RouteForm";
+import { AppBar, Toolbar, Typography, Container, Button } from "@mui/material";
 
-function App() {
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <AppBar position="static">
+        <Toolbar>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            Routes
+          </Typography>
+          <Button color="inherit" component={Link} to="/">
+            List of Routes
+          </Button>
+          <Button color="inherit" component={Link} to="/add">
+            Add Route
+          </Button>
+        </Toolbar>
+      </AppBar>
+      <Container sx={{ marginTop: 2 }}>
+        <Routes>
+          <Route path="/" element={<RouteList />} />
+          <Route path="/route/:id" element={<RouteDetails />} />
+          <Route path="/add" element={<RouteForm />} />
+        </Routes>
+      </Container>
+    </Router>
   );
-}
+};
 
 export default App;
