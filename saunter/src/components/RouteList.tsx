@@ -4,18 +4,28 @@ import { Route, RootState } from "../types/types";
 import { fetchData } from "../store/routesSlice";
 import RouteItem from "./RouteItem";
 import { AppDispatch } from "../store/store";
-const RouteList: React.FC = () => {
-  const dispatch: AppDispatch = useDispatch();
+import RouteSearchForm from "./RouteSearchForm";
 
-  const routes = useSelector((state: RootState) => state.routes);
+const RouteList: React.FC = () => {
+  const state = useSelector((state: RootState) => state);
+  const routes = state.routes;
+  const searchKeyword = state.searchKeyword;
+  const dispatch: AppDispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchData());
   }, [dispatch]);
+
   if (routes.length) {
+    const filteredRoutes: Route[] = routes.filter((route) =>
+      route.fullDescription.toLowerCase().includes(searchKeyword.toLowerCase())
+    );
+    const sortedRoutes = filteredRoutes.sort((a, b) =>
+      a.isFavorite === b.isFavorite ? 0 : a.isFavorite ? -1 : 1
+    );
     return (
       <div>
-        <h2>List of Routes</h2>
-        {routes?.map((route: Route) => (
+        <RouteSearchForm />
+        {sortedRoutes?.map((route: Route) => (
           <RouteItem key={route.id} route={route} />
         ))}
       </div>

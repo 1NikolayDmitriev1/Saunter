@@ -1,13 +1,11 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { database } from "../services/firebase";
 import { ref, set, get, child } from "firebase/database";
-import { RootState } from "../types/types";
+import { RootState, Route } from "../types/types";
 
 export const fetchData = createAsyncThunk("data/fetchData", async () => {
-  const snapshot = await get(child(ref(database), "routs"));
+  const snapshot = await get(child(ref(database), "routes"));
   if (snapshot.exists()) {
-    console.log("snapshot.val()", snapshot.val());
-
     return snapshot.val();
   } else {
     throw new Error("No data available");
@@ -16,30 +14,44 @@ export const fetchData = createAsyncThunk("data/fetchData", async () => {
 
 export const writeData = createAsyncThunk(
   "data/writeData",
-  async (data: object) => {
-    await set(ref(database, "routs"), data);
+  async (data: Route[]) => {
+    await set(ref(database, "routes"), data);
   }
 );
 export const deleteData = createAsyncThunk(
   "data/deleteData",
-  async (data: object) => {
-    await set(ref(database, "routs"), data);
+  async (data: Route[]) => {
+    await set(ref(database, "routes"), data);
+    return data;
   }
 );
+
 const initialState: RootState = {
   routes: [],
+  selectedRoute: null,
+  searchKeyword: ""
 };
-const dataSlice = createSlice({
+
+export const dataSlice = createSlice({
   name: "data",
   initialState,
-  reducers: {},
+  reducers: {
+    selectRoute: (state: RootState, action: PayloadAction<Route>) => {
+      state.selectedRoute = action.payload;
+    },
+    setSearchKeyword: (state, action: PayloadAction<string>) => {
+      state.searchKeyword = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchData.fulfilled, (state, action) => {
-        return action.payload;
+        state.routes = action.payload;
       })
       .addCase(writeData.fulfilled, (state, action) => {})
-      .addCase(deleteData.fulfilled, (state, action) => {});
+      .addCase(deleteData.fulfilled, (state, action) => {
+        state.routes = action.payload;
+      });
   },
 });
 

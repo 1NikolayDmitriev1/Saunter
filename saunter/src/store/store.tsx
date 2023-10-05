@@ -1,10 +1,8 @@
-import { configureStore } from '@reduxjs/toolkit';
-import routesReducer from './routesSlice';
+import { configureStore } from "@reduxjs/toolkit";
+import routesReducer from "./routesSlice";
 
 export const store = configureStore({
-  reducer: {
-    routes: routesReducer,
-  },
+  reducer: routesReducer,
 });
 
 export type AppDispatch = typeof store.dispatch;
