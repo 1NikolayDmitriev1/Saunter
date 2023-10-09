@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 import ReactMapGL, {
   NavigationControl,
   Marker,
@@ -33,14 +33,20 @@ const MapComponent: React.FC<MapComponentProps> = ({
   const [newMarkers, setNewMarkers] = useState<number[][]>([...markers]);
   const storeMarkers = useSelector((state: RootState) => state.markers);
   const [totalDistance, setTotalDistance] = useState<number>(0);
-
-  const [viewport, setViewport] = useState({
+  const viewportData = {
     width: "100%",
     height,
     latitude: markers.length ? markers[0][1] : 50.4376933309521,
     longitude: markers.length ? markers[0][0] : 30.547403001481854,
     zoom: 10,
-  });
+  };
+
+  const [viewport, setViewport] = useState(viewportData);
+  useEffect(() => {
+    if (markers.length) {
+      setViewport(viewportData);
+    }
+  }, [height, markers]);
 
   const calculateDistance = useMemo(() => {
     return (
