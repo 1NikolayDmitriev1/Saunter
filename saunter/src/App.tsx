@@ -5,7 +5,7 @@ import RouteForm from "./components/RouteForm";
 import { AppBar, Toolbar, Typography, Container, Button } from "@mui/material";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
-
+import "mapbox-gl/dist/mapbox-gl.css";
 const App: React.FC = () => {
   return (
     <Provider store={store}>
@@ -16,7 +16,7 @@ const App: React.FC = () => {
               Routes
             </Typography>
             <Button color="inherit" component={Link} to="/">
-            List of Paths
+              List of Paths
             </Button>
             <Button color="inherit" component={Link} to="/add">
               Add Path

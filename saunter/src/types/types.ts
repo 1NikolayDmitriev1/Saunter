@@ -5,11 +5,13 @@ export interface Route {
   fullDescription: string;
   length: string;
   isFavorite: boolean;
-  markers: number[];
+  markers: number[][];
 }
 
 export interface RootState {
   routes: Route[];
   selectedRoute: Route | null;
   searchKeyword: string;
+  markers: number[][]; 
+  totalDistance: string;
 }

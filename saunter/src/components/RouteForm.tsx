@@ -9,7 +9,7 @@ import {
   Paper,
 } from "@mui/material";
 import { Route } from "../types/types";
-import { writeData, fetchData } from "../store/routesSlice";
+import { writeData, fetchData, dataSlice } from "../store/routesSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../types/types";
 import { AppDispatch } from "../store/store";
@@ -49,10 +49,12 @@ const RouteForm: React.FC = () => {
   const [routeData, setRouteData] = useState<Route>(emptyRout);
   const dispatch: AppDispatch = useDispatch();
   const routes = useSelector((state: RootState) => state.routes);
+  const length = useSelector((state: RootState) => state.totalDistance);
+  const markers = useSelector((state: RootState) => state.markers);
 
   useEffect(() => {
     dispatch(fetchData());
-  }, [dispatch]);
+  }, [dispatch, length]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -74,17 +76,21 @@ const RouteForm: React.FC = () => {
     e.preventDefault();
     const newRoute: Route = {
       ...routeData,
+      length,
+      markers,
       id: uuidv4(),
     };
     const newData = [...routes, newRoute];
     dispatch(writeData(newData));
+    dataSlice.actions.addMarker([]);
+    dataSlice.actions.updateTotalDistance("0");
     setRouteData(emptyRout);
   };
 
   return (
     <Box>
       <Grid container spacing={2}>
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
           <StyledPaper>
             <form onSubmit={handleSubmit}>
               <TextField
@@ -118,7 +124,7 @@ const RouteForm: React.FC = () => {
               />
               <StyledBox>
                 <AddLocationAltIcon />
-                <Typography>{routeData.length} km</Typography>
+                <Typography>{length} km</Typography>
               </StyledBox>
               <StyledBox>
                 <Typography>Favorite</Typography>
@@ -140,9 +146,9 @@ const RouteForm: React.FC = () => {
             </form>
           </StyledPaper>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
           <StyledPaper>
-            <MapComponent />
+            <MapComponent height={"575px"} putMarkersFlag={true} />
           </StyledPaper>
         </Grid>
       </Grid>

@@ -1,13 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Route } from "../types/types";
-import { IconButton, Grid, Paper, Typography, Box } from "@mui/material";
+import {
+  IconButton,
+  Grid,
+  Paper,
+  Typography,
+  Box,
+  Collapse,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { Favorite } from "@mui/icons-material";
 import { AppDispatch } from "../store/store";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { styled } from "@mui/system";
 import CallSplitIcon from "@mui/icons-material/CallSplit";
 import { dataSlice } from "../store/routesSlice";
+import RouteDetails from "./RouteDetails";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
 interface RouteItemProps {
   route: Route;
@@ -29,39 +40,59 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
 
 const RouteItem: React.FC<RouteItemProps> = ({ route }) => {
   const dispatch: AppDispatch = useDispatch();
-
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const selectRoute = dataSlice.actions.selectRoute;
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleRouteSelection = () => {
     dispatch(selectRoute(route));
+    if (isSmallScreen) {
+      handleToggleDetails();
+    }
+  };
+
+  const handleToggleDetails = () => {
+    if (isSmallScreen) {
+      setIsDetailsOpen(!isDetailsOpen);
+    }
   };
 
   return (
-    <StyledPaper onClick={handleRouteSelection} elevation={3}>
-      <CallSplitIcon fontSize="large" />
-      <Grid
-        container
-        direction="column"
-        justifyContent="space-between"
-        alignItems="flex-start"
-      >
-        <Grid item>
-          <Box display={"flex"} gap={"8px"} alignItems={"center"}>
-            <Favorite color={route.isFavorite ? "secondary" : "action"} />
-            <Typography variant="h6">{route.title}</Typography>
+    <Box>
+      <StyledPaper onClick={handleRouteSelection} elevation={3}>
+        <CallSplitIcon fontSize="large" />
+        <Grid
+          container
+          direction="column"
+          justifyContent="space-between"
+          alignItems="flex-start"
+        >
+          <Grid item>
+            <Box display={"flex"} gap={theme.spacing(1)} alignItems={"center"}>
+              <Favorite color={route.isFavorite ? "secondary" : "action"} />
+              <Typography variant="h6">{route.title}</Typography>
+            </Box>
+          </Grid>
+          <Grid item>
+            <Typography textAlign={"initial"} variant="body2">
+              {route.shortDescription}
+            </Typography>
+          </Grid>
+        </Grid>
+        <Typography variant="body2">{route.length} km</Typography>
+        <IconButton>
+          {isDetailsOpen ? <ArrowDownwardIcon /> : <ArrowForwardIcon />}
+        </IconButton>
+      </StyledPaper>
+      {isSmallScreen && (
+        <Collapse in={isDetailsOpen}>
+          <Box marginTop={theme.spacing(3)}>
+            <RouteDetails />
           </Box>
-        </Grid>
-        <Grid item>
-          <Typography textAlign={"initial"} variant="body2">
-            {route.shortDescription}
-          </Typography>
-        </Grid>
-      </Grid>
-      <Typography variant="body2">{route.length} km</Typography>
-      <IconButton>
-        <ArrowForwardIcon />
-      </IconButton>
-    </StyledPaper>
+        </Collapse>
+      )}
+    </Box>
   );
 };
 

@@ -5,11 +5,13 @@ import { fetchData } from "../store/routesSlice";
 import RouteItem from "./RouteItem";
 import { AppDispatch } from "../store/store";
 import RouteSearchForm from "./RouteSearchForm";
+import { Box, useMediaQuery, useTheme } from "@mui/material";
 
 const RouteList: React.FC = () => {
-  const state = useSelector((state: RootState) => state);
-  const routes = state.routes;
-  const searchKeyword = state.searchKeyword;
+  const routes = useSelector((state: RootState) => state.routes);
+  const searchKeyword = useSelector((state: RootState) => state.searchKeyword);
+  const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up("sm"));
   const dispatch: AppDispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchData());
@@ -23,12 +25,15 @@ const RouteList: React.FC = () => {
       a.isFavorite === b.isFavorite ? 0 : a.isFavorite ? -1 : 1
     );
     return (
-      <div>
+      <Box
+        maxHeight={isDesktop ? "80vh" : "none"}
+        overflow={isDesktop ? "auto" : "visible"}
+      >
         <RouteSearchForm />
         {sortedRoutes?.map((route: Route) => (
           <RouteItem key={route.id} route={route} />
         ))}
-      </div>
+      </Box>
     );
   } else {
     return <></>;

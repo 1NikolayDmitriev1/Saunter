@@ -29,18 +29,26 @@ export const deleteData = createAsyncThunk(
 const initialState: RootState = {
   routes: [],
   selectedRoute: null,
-  searchKeyword: ""
+  searchKeyword: "",
+  markers: [],
+  totalDistance: "0",
 };
 
 export const dataSlice = createSlice({
   name: "data",
   initialState,
   reducers: {
-    selectRoute: (state: RootState, action: PayloadAction<Route>) => {
+    selectRoute: (state: RootState, action: PayloadAction<Route | null>) => {
       state.selectedRoute = action.payload;
     },
     setSearchKeyword: (state, action: PayloadAction<string>) => {
       state.searchKeyword = action.payload;
+    },
+    addMarker: (state: RootState, action: PayloadAction<number[][]>) => {
+      state.markers = action.payload;
+    },
+    updateTotalDistance: (state, action: PayloadAction<string>) => {
+      state.totalDistance = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -48,7 +56,7 @@ export const dataSlice = createSlice({
       .addCase(fetchData.fulfilled, (state, action) => {
         state.routes = action.payload;
       })
-      .addCase(writeData.fulfilled, (state, action) => {})
+      .addCase(writeData.fulfilled, () => {})
       .addCase(deleteData.fulfilled, (state, action) => {
         state.routes = action.payload;
       });
