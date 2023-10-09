@@ -1,9 +1,9 @@
 import React from "react";
 import { Grid, Paper } from "@mui/material";
-import RouteList from "./RouteList";
-import RouteDetails from "./RouteDetails";
 import { styled, Box } from "@mui/system";
 import { useMediaQuery, useTheme } from "@mui/material";
+import RouteList from "./RouteList";
+import RouteDetails from "./RouteDetails";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(1),

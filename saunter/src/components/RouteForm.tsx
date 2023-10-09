@@ -8,15 +8,15 @@ import {
   Box,
   Paper,
 } from "@mui/material";
-import { Route } from "../types/types";
-import { writeData, fetchData, dataSlice } from "../store/routesSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../types/types";
-import { AppDispatch } from "../store/store";
 import { v4 as uuidv4 } from "uuid";
-import MapComponent from "./MapComponent";
 import { styled } from "@mui/system";
 import AddLocationAltIcon from "@mui/icons-material/AddLocationAlt";
+import { Route } from "../types/types";
+import { writeData, fetchData, dataSlice } from "../store/routesSlice";
+import { RootState } from "../types/types";
+import { AppDispatch } from "../store/store";
+import MapComponent from "./MapComponent";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -46,15 +46,17 @@ const RouteForm: React.FC = () => {
     length: "0",
     isFavorite: false,
   };
+
   const [routeData, setRouteData] = useState<Route>(emptyRout);
   const dispatch: AppDispatch = useDispatch();
   const routes = useSelector((state: RootState) => state.routes);
   const length = useSelector((state: RootState) => state.totalDistance);
   const markers = useSelector((state: RootState) => state.markers);
+  const [mapKey, setMapKey] = useState(0);
 
   useEffect(() => {
     dispatch(fetchData());
-  }, [dispatch, length]);
+  }, [dispatch]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -82,11 +84,12 @@ const RouteForm: React.FC = () => {
     };
     const newData = [...routes, newRoute];
     dispatch(writeData(newData));
-    dataSlice.actions.addMarker([]);
-    dataSlice.actions.updateTotalDistance("0");
+    dispatch(dataSlice.actions.addMarker([]));
+    dispatch(dataSlice.actions.updateTotalDistance("0"));
     setRouteData(emptyRout);
+    setMapKey((prevKey) => prevKey + 1);
   };
-
+  
   return (
     <Box>
       <Grid container spacing={2}>
@@ -148,7 +151,11 @@ const RouteForm: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6}>
           <StyledPaper>
-            <MapComponent height={"575px"} putMarkersFlag={true} />
+            <MapComponent
+              putMarkersFlag={true}
+              key={mapKey.toString()}
+              height={"575px"}
+            />
           </StyledPaper>
         </Grid>
       </Grid>

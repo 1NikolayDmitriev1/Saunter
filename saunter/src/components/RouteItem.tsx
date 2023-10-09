@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Route } from "../types/types";
+
 import {
   IconButton,
   Grid,
@@ -12,13 +12,14 @@ import {
   useTheme,
 } from "@mui/material";
 import { Favorite } from "@mui/icons-material";
-import { AppDispatch } from "../store/store";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { styled } from "@mui/system";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import CallSplitIcon from "@mui/icons-material/CallSplit";
+import { AppDispatch } from "../store/store";
 import { dataSlice } from "../store/routesSlice";
 import RouteDetails from "./RouteDetails";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import { Route } from "../types/types";
 
 interface RouteItemProps {
   route: Route;

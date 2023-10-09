@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Box, useMediaQuery, useTheme, Typography } from "@mui/material";
 import { Route, RootState } from "../types/types";
 import { fetchData } from "../store/routesSlice";
 import RouteItem from "./RouteItem";
 import { AppDispatch } from "../store/store";
 import RouteSearchForm from "./RouteSearchForm";
-import { Box, useMediaQuery, useTheme } from "@mui/material";
 
 const RouteList: React.FC = () => {
   const routes = useSelector((state: RootState) => state.routes);
@@ -24,6 +24,7 @@ const RouteList: React.FC = () => {
     const sortedRoutes = filteredRoutes.sort((a, b) =>
       a.isFavorite === b.isFavorite ? 0 : a.isFavorite ? -1 : 1
     );
+
     return (
       <Box
         maxHeight={isDesktop ? "80vh" : "none"}
@@ -36,7 +37,7 @@ const RouteList: React.FC = () => {
       </Box>
     );
   } else {
-    return <></>;
+    return <Typography variant="h4">Add the Paths</Typography>;
   }
 };
 

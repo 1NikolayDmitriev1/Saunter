@@ -1,8 +1,8 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useMediaQuery, useTheme } from "@mui/material";
-import { RootState, Route } from "../types/types";
 import { Typography, Button, Box } from "@mui/material";
+import { RootState, Route } from "../types/types";
 import MapComponent from "./MapComponent";
 import { dataSlice, deleteData } from "../store/routesSlice";
 import { AppDispatch } from "../store/store";
@@ -19,7 +19,7 @@ const RouteDetails: React.FC = () => {
       (elem: Route) => elem.id !== selectedRoute?.id
     );
     dispatch(deleteData(changedRouts));
-    dataSlice.actions.selectRoute(null);
+    dispatch(dataSlice.actions.selectRoute(null));
   };
 
   if (!selectedRoute) {
@@ -43,7 +43,12 @@ const RouteDetails: React.FC = () => {
       >
         {selectedRoute.fullDescription}
       </Typography>
-      <MapComponent height={"450px"} markers={selectedRoute.markers} />
+      <MapComponent
+      
+        showPropsMarkers={true}
+        height={"450px"}
+        markers={selectedRoute.markers}
+      />
       <Button
         variant="contained"
         color="error"
