@@ -1,3 +1,5 @@
+#Not Google card was used, as Google does not allow adding payment accounts from Ukraine, which are necessary to get Google api key.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
